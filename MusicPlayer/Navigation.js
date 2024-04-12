@@ -2,6 +2,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import Music from './src/Music';
 import Home from './src/Home';
 import Settings from './src/Settings';
+import { StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 const Tab = createBottomTabNavigator();
@@ -18,8 +19,9 @@ function TabGroup(){
 
 export default function Navigation() {
   return (
-		<NavigationContainer>
+		<NavigationContainer >
 			<TabGroup/>
 		</NavigationContainer>
   );
 }
+

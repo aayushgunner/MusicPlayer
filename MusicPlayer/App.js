@@ -1,29 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import { Image, ImageBackground,StyleSheet, Text, View } from 'react-native';
+import { Image, ImageBackground,StyleSheet, Text, View,Dimensions } from 'react-native';
 import Navigation from './Navigation';
 
+  const { height, width } = Dimensions.get('window');
 export default function App() {
   const bgimage = require('./assets/bg.jpg');
   return (
-    <View style={styles.container}>
-       <ImageBackground source={bgimage} resizeMode="cover" style={styles.backgroundImage}>
-      <StatusBar style="auto" />
-        	  <Navigation/>
-
-      </ImageBackground>
-    </View>
+       <ImageBackground source={bgimage} style={styles.backgroundImage} >
+                	  <Navigation/>
+                    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   backgroundImage: {
     flex: 1,
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+    width: width,
+    height: height,
+    resizeMode: 'cover', // or 'stretch' for different effects
+  },});
