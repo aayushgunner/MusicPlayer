@@ -1,7 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native'; // Import ScrollView
+import React, { useState, useEffect } from 'react';
+import { StatusBar, Alert, TextInput } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
-import { useEffect, useState } from 'react';
 import { Audio } from 'expo-av';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -10,13 +10,35 @@ export default function Music() {
   const [playing, setPlaying] = useState(-1);
   const [sound, setSound] = useState(null);
   const [progressDuration, setProgressDuration] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchMusicFiles = async () => {
-    const permission = await MediaLibrary.requestPermissionsAsync();
-    const media = await MediaLibrary.getAssetsAsync({
-      mediaType: MediaLibrary.MediaType.audio,
-    });
-    setMusicFiles(media.assets);
+    Alert.alert(
+      "Permission Request",
+      "This app needs access to your media library to play music. Do you allow?",
+      [
+        {
+          text: "Don't Allow",
+          onPress: () => console.log("Permission denied"),
+          style: "cancel"
+        },
+        {
+          text: "Allow",
+          onPress: async () => {
+            const permission = await MediaLibrary.requestPermissionsAsync();
+            if (permission.granted) {
+              const media = await MediaLibrary.getAssetsAsync({
+                mediaType: MediaLibrary.MediaType.audio,
+                first: 1000,
+              });
+              setMusicFiles(media.assets);
+            } else {
+              console.log("Permission denied");
+            }
+          }
+        }
+      ]
+    );
   };
 
   const playMusic = async (fileUri) => {
@@ -39,7 +61,6 @@ export default function Music() {
       if (status.didJustFinish) {
         setPlaying(-1);
         await sound.unloadAsync();
-        console.log("finished");
         setSound(null);
       } else {
         setProgressDuration(status.positionMillis / 1000);
@@ -51,17 +72,27 @@ export default function Music() {
     fetchMusicFiles();
   }, []);
 
+  // Filter music files based on search query
+  const filteredMusicFiles = musicFiles.filter(file =>
+    file.filename.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <Text style={styles.heading}>Welcome to GeeksforGeeks</Text>
-      {/* Wrap the list with ScrollView */}
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search songs..."
+        onChangeText={setSearchQuery}
+        value={searchQuery}
+      />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        {musicFiles.map((file, index) => (
+        {filteredMusicFiles.map((file, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => {
               if (playing !== index) {
+                pauseMusic();
                 playMusic(file.uri);
                 setPlaying(index);
               } else {
@@ -102,12 +133,6 @@ const styles = StyleSheet.create({
     height: "100%",
     marginTop: 50,
   },
-  heading: {
-    color: "green",
-    fontSize: 30,
-    textAlign: "center",
-    fontWeight: "bold",
-  },
   fileName: {
     fontSize: 18,
     color: "white",
@@ -121,5 +146,11 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     flexGrow: 1,
+  },
+  searchInput: {
+    backgroundColor: "#eaeaea",
+    padding: 10,
+    margin: 10,
+    borderRadius: 10,
   },
 });
