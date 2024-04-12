@@ -1,5 +1,8 @@
 import { Image, ImageBackground,StyleSheet, Text, View,Dimensions } from 'react-native';
 import Navigation from './Navigation';
+import * as MediaLibrary from  'expo-media-library';
+import { Audio } from 'expo-av';
+import Ionicons from '@expo/vector-icons/Ionicons';
 const bgimage = require('./assets/bg.jpg');
 
   const { height, width } = Dimensions.get('window');
