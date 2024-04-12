@@ -1,9 +1,7 @@
-import {SafeAreaView, Text} from 'react-native';
+import { SafeAreaView, Image, ImageBackground,StyleSheet, Text, View } from 'react-native';
 
 export default function Music(){
 	return(
-		<SafeAreaView>
 		<Text> This is music page </Text>
-		</SafeAreaView>
 	);
 }

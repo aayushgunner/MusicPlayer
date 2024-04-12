@@ -1,9 +1,9 @@
 import { Image, ImageBackground,StyleSheet, Text, View,Dimensions } from 'react-native';
 import Navigation from './Navigation';
+const bgimage = require('./assets/bg.jpg');
 
   const { height, width } = Dimensions.get('window');
 export default function App() {
-  const bgimage = require('./assets/bg.jpg');
   return (
        <ImageBackground source={bgimage} style={styles.backgroundImage} >
                 	  <Navigation/>
