@@ -29,7 +29,7 @@ export default function Music() {
             if (permission.granted) {
               const media = await MediaLibrary.getAssetsAsync({
                 mediaType: MediaLibrary.MediaType.audio,
-                first: 1000,
+                first: 100,
               });
               setMusicFiles(media.assets);
             } else {
@@ -91,11 +91,20 @@ export default function Music() {
           <TouchableOpacity
             key={index}
             onPress={() => {
-              if (playing !== index) {
-                pauseMusic();
+              if (playing == -1) {
                 playMusic(file.uri);
                 setPlaying(index);
-              } else {
+              }
+
+              else if (playing!==index) {
+
+                pauseMusic();
+                setProgressDuration(0);
+                playMusic(file.uri);
+                setPlaying(index);
+              }
+
+              else {
                 pauseMusic();
                 setPlaying(-1);
               }
